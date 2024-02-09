@@ -230,6 +230,15 @@
 #hide-order-det {
     display: none;
 }
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+    .see-more-btn {
+    cursor: pointer;
+    color: blue;
+    }
 </style>
 
 <body id="page-top" class="sidebar-toggled">
@@ -300,13 +309,17 @@
                                     <?php
                                     foreach ($order_data as $value) { 
                                       if ($value['order_id'] == $order_id) {
+
+                                        $shipmentSlNo = 0;
+                                              foreach ($value['general_order'] as $generalOrder) {
+                                                  $shipmentSlNo ++;
                                          ?>
                                          
                                          
                                          <div class="card card-stepper shadow ">
                                             <div class="card-header d-flex justify-content-between py-3 ">
                                                 <!-- <?php echo $order_id; ?> -->
-                                                <h6 class="mt-2 font-weight-bold">Order ID :<span> <?php echo $order_id; ?> </span></h6>
+                                                <h6 class="mt-2 font-weight-bold"> Shipment No :<span> <?php echo $generalOrder['shipment_no']; ?> </span></h6>
                                                 <!-- <button class="btn btn-primary float-right px-4 py-2" onclick="window.print()"> Print <i class="fa fa-print ml-2"></i></button> -->
                                                 <button class="btn btn-primary float-right px-4 py-2 btn-print" onclick="window.print()"> Print <i class="fa fa-print ml-2"></i></button>
                                             </div>
@@ -398,13 +411,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <?php
-                            $shipmentSlNo = 0;
-                      // foreach ($order_data as $value) { 
-                            foreach ($value['general_order'] as $generalOrder) {
-                                $shipmentSlNo ++;
-                        //  if ($value['order_id'] == $order_id) {
-                                ?>
+                        
                                 
                                 <section class="faq-section">
                                     <div class="col-md-12 ">
@@ -428,14 +435,14 @@
                                                             <div class="tab-pane active" role="tabpanel" id="info">
                                                                 
                                                                 <div class="row d-flex h-100">
-                                                                    <div>
+                                                                    <!-- <div>
                                                                         <p class="text-muted mb-2 pl-3"><b>Shipment Sl. No. </b><span
                                                                             class="fw-bold text-body"><?php echo $shipmentSlNo; ?></span></p>
-                                                                        </div>
+                                                                        </div> -->
                                                                         <div class="col-md-12 ">
                                                                             
                                                                             <div class="cardd card-stepper ">
-                                                                                <div class="card-header pt-2 pb-2 pl-3 pr-3">
+                                                                                <!-- <div class="card-header pt-2 pb-2 pl-3 pr-3">
                                                                                     <div class="d-flex justify-content-between align-items-center px-2">
                                                                                         
                                                                                         <p class="text-muted mb-2"><b>Order Overview </b></p>
@@ -444,12 +451,12 @@
                                                                                         </p>
                                                                                         
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                                 <div class="card-body p-4">
                                                                                     
                                                                                     <div class="row">
                                                                                         
-                                                                                        <div class="col-md-3 pl-3 ">
+                                                                                        <div class="col-md-3  ">
                                                                                             <p class="text-muted"><b> Po Received Date : </b> <span
                                                                                                 class="fw-bold text-body"><?php echo $generalOrder['po_received_data']; ?></span>
                                                                                             </p>
@@ -457,7 +464,7 @@
                                                                                                                 class="fw-bold text-body"><?php echo $generalOrder['dispatch_data']; ?></span>
                                                                                                             </p> -->
                                                                                                         </div>
-                                                                                                        <div class="col-md-3 pl-3">
+                                                                                                        <div class="col-md-3 ">
                                                                                                             <p class="text-muted">
                                                                                                                 <?php if($generalOrder['new_dispatch_date'] == '') { ?>    
                                                                                                                     <b> Dispatch Date : </b> <span
@@ -480,33 +487,26 @@
                                                                                                                 class="fw-bold text-body"><?php echo $generalOrder['remarks']; ?></span>
                                                                                                             </p> -->
 
-                                                                                                            <style>
-                                                                                                                .truncate {
-                                                                                                                    white-space: nowrap;
-                                                                                                                    overflow: hidden;
-                                                                                                                    text-overflow: ellipsis;
-                                                                                                                }
-                                                                                                                .see-more-btn {
-                                                                                                                    cursor: pointer;
-                                                                                                                    color: blue;
-                                                                                                                }
-                                                                                                            </style>
-
                                                                                                             
                                                                                                             <?php 
                                                                                                             $remarks = $generalOrder['remarks'];
                                                                                                             $truncatedRemarks = strlen($remarks) > 20 ? substr($remarks, 0, 20) . '...' : $remarks;
                                                                                                             
                                                                                                             ?>
-                                                                                                            <div class="col-md-4 pl-3">
+                                                                                                            <div class="col-md-2 ">
                                                                                                                 <b> Remarks : </b>
                                                                                                                 <span class="fw-bold text-body remarks-text"><?php echo $truncatedRemarks; ?></span>
                                                                                                                 <span class="full-text" style="display: none;"><?php echo $remarks; ?></span>
                                                                                                                 
                                                                                                             </div>
-                                                                                                            <div class="col-md-2 pl-3">
+                                                                                                            <div class="col-md-2 ">
                                                                                                                 <p class="text-muted"><b> Size-FCL : </b> <span
                                                                                                                     class="fw-bold text-body"><?php echo $generalOrder['size-fcl']; ?></span>
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                            <div class="col-md-2 ">
+                                                                                                                <p class="text-muted"><b> Shipment Term : </b> <span
+                                                                                                                    class="fw-bold text-body"><?php echo $generalOrder['shipmentTerm']; ?></span>
                                                                                                                 </p>
                                                                                                             </div>
                                                                                                         </div>
@@ -517,12 +517,13 @@
                                                                                                                 <tr>
                                                                                                                     <th>Sl. No. </th>
                                                                                                                     <th>Order No </th>
+                                                                                                                    <th>Order Date</th>
                                                                                                                     <th>Dimension External </th>
                                                                                                                     <th>QTY </th>
                                                                                                                     <th>Packing </th>
                                                                                                                     <th>Pallets </th>
                                                                                                                     <th>PAL/Bales </th>
-                                                                                                                    <th>Shipment Term </th>
+                                                                                                                    <th>Currency </th>
                                                                                                                     <th>Price </th>
                                                                                                                 </tr>
                                                                                                             </thead>
@@ -532,15 +533,15 @@
                                                                                                                 $slNo ++;
                                                                                                                 ?>
                                                                                                                 <tr >
-                                                                                                                    
                                                                                                                     <td> <?php echo $slNo; ?> </td>
                                                                                                                     <td> <?php echo $shipmentOrder['order_no']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['order_date']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['dimension_external']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['qty']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['packing']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['pallets']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['bales']; ?></td>
-                                                                                                                    <td> <?php echo $shipmentOrder['shipment_term']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['currency']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['price']; ?></td>
                                                                                                                     
                                                                                                                 </tr>

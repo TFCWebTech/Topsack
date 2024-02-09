@@ -52,28 +52,51 @@ width: 95%;
 #completedOrder{
   margin-left: 120px ;
 }
+.form-control {
+    margin: 2px;
+ 
+    background-color: #f8f9fc !important;
+    border-radius: 0rem !important;
+}
 </style>
 <div class="container-fluid">
   
 
-        <div class="card-header py-3 d-flex justify-content-between">
+    
+    <div class="card-header py-3 d-flex justify-content-between">
         <h3 class="m-0 font-weight-bold text-primary">Transit Details</h3>
-        <div>
-        <form action="<?php echo site_url('Orders/searchComData') ?>" method="post"
-            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search ">
-            <div class="input-group  ">
-                <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput" id="searchOrderInput" placeholder="Search By Order ID"
-                    aria-label="Search" aria-describedby="basic-addon2">
-                   <!-- <div class="input-group-append"> -->
-                    <button class="btn btn-primary" type="button" id="searchOrderBtn" onclick="searchOrder()"> 
+        <!-- <div></div> -->
+        <div >
+            <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search ">
+            <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search "> -->
+                <!-- <div class="row">
+                                <div class="col-sm-6">
+                               
+                              </div> -->
+                <!-- <div class="col-sm-6"> -->
+                <div class="input-group">
+                    <div class="form-group">
+                        <select class="form-control" name="search_value" id="search_value" required>
+                            <option>Select</option>
+                            <option value="customer_name">Customer Name </option>
+                            <option value="shipment_no">Shipment No</option>
+                            <!-- <option value="order_id">Order ID</option> -->
+
+                        </select>
+                    </div>
+                    <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput"
+                        id="searchOrderInput" placeholder="Search " aria-label="Search"
+                        aria-describedby="basic-addon2" onkeypress="handleKeyPress(event)">
+                    <button class="btn btn-primary" type="button" id="searchOrderBtn" onclick="searchOrder()">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
-                <!-- </div> -->
-            </div>
-        </form>
+                    <!-- </div> -->
+                    </div>
+                </div>
+            <!-- </form> -->
         </div>
     </div>
-                                  
+                   
 
 <section class="gradient-custom-2" id="searchOrderId">
 <div class="container  h-100">
@@ -81,7 +104,8 @@ width: 95%;
     if (!empty($order_data)) {
   foreach ($order_data as $value) { 
     // foreach ($value['general_order'] as $generalOrder) {
-    //   foreach ($generalOrder['shipment_order'] as $shipmentOrder) {
+      foreach ($value['general_order'] as $generalOrder) {
+      // foreach ($generalOrder['shipment_order'] as $shipmentOrder) {
         if ($value['order_status'] == 2){ 
     ?>
           <div class="row d-flex  align-items-center h-100 ">
@@ -90,8 +114,13 @@ width: 95%;
                 <div class="card-header pt-2 pb-2 pl-3 pr-3">
                   <div class="row">
                     <div class="col-md-2">
-                    <p class="text-muted mb-2" id="order_id">Order ID: <span class="fw-bold text-body" > <?php echo $value['order_id']; ?>  </span></p>
-                    </div>
+                    <p class="text-muted mb-2" id="order_id" hidden>Order ID: <span class="fw-bold text-body" > <?php echo $value['order_id']; ?>  </span></p>
+                    <p class="text-muted mb-0" id="shipment_no">Shipment No.: <span
+                                            class="fw-bold text-body"> <?php echo $generalOrder['shipment_no']; ?>
+                                        </span></p>
+                                        <p class="text-muted mb-2" id="Customer_name">Customer Name: <span class="fw-bold text-body">
+                                            <?php echo $value['customer_name']; ?> </span></p>  
+                  </div>
                     <div class="col-md-8">
                     <ul id="progressbar-1" class="mx-0 mt-0 mb-0 px-0 pt-0 pb-0">
                           <?php if($value['order_status'] == 0) { ?>
@@ -188,7 +217,7 @@ width: 95%;
          
       </div>
       <?php
-            //   } 
+              } 
             }
           }
         }else {
@@ -259,7 +288,7 @@ width: 95%;
     }
 </script>
 
-<script>
+<!-- <script>
   function searchOrder(){
     // alert('cliekd');
    searchOrderID = $('#searchOrderInput').val();
@@ -275,4 +304,32 @@ width: 95%;
             }
         })
   }
+</script> -->
+
+<script>
+    function handleKeyPress(event) {
+    if (event.keyCode === 13) {
+        // Enter key was pressed, call searchOrder() function
+        searchOrder();
+    }
+}
+function searchOrder() {
+    // alert('cliekd');
+    searchOrderID = $('#searchOrderInput').val();
+    search_value = $('#search_value').val();
+
+    $.ajax({
+        type: 'POST',
+        url: "<?php echo site_url('Orders/searchComData'); ?>",
+        datatype: "html",
+        data: {
+            searchOrderID: searchOrderID,
+            search_value: search_value
+        },
+        success: function(data) {
+            $('#searchOrderId').html(data);
+            // $('#search_value').html(data);
+        }
+    })
+}
 </script>

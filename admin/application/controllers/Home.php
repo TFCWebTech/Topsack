@@ -169,7 +169,7 @@ class Home extends CI_Controller {
             $remarks = $this->input->post('remarks'.$i);
             $size_fcl = $this->input->post('size_fcl'.$i);
             $my_order_no = $this->input->post('order_no'.$i);
-            
+            $shipment_term = $this->input->post('shipment_term'.$i);
             // $po_receive_date = DateTime::createFromFormat('d/m/Y', $po_received_date);
 
             //     if ($po_receive_date === false) {
@@ -186,8 +186,8 @@ class Home extends CI_Controller {
             //         $dispatch_date2 = $dispatch_date2->format('Y-m-d');
             //     }
 
-                $this->db->query("INSERT INTO `general_order`( `shipment_no`, `po_received_data`, `dispatch_data`, `remarks`, `size-fcl`, `order_id`)
-                VALUES (  ?, ?, ?, ?, ?, ?)", array( $shipment_no, $po_received_date, $dispatch_date, $remarks, $size_fcl, $order_id));
+                $this->db->query("INSERT INTO `general_order`( `shipment_no`, `po_received_data`, `dispatch_data`, `remarks`, `size-fcl`, `shipmentTerm`, `order_id`)
+                VALUES (  ?, ?, ?, ?, ?, ?, ?)", array( $shipment_no, $po_received_date, $dispatch_date, $remarks, $size_fcl, $shipment_term, $order_id));
             
             
              $general_order_id = $this->db->insert_id();
@@ -199,21 +199,26 @@ class Home extends CI_Controller {
                $packing = $this->input->post('packing'.$i)[$j];
                 $pallets = $this->input->post('pallets'.$i)[$j];
                 $bales = $this->input->post('pal_bales'.$i)[$j];
-                $shipment_term = $this->input->post('shipment_term'.$i)[$j];
+                // $shipment_term = $this->input->post('shipment_term'.$i)[$j];
                 $currency = $this->input->post('currency'.$i)[$j];
                  $price = $this->input->post('price'.$i)[$j];
-                
-                $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `bales`, `shipment_term`, `currency`, `price`)
-                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $bales, $shipment_term, $currency, $price));
+                 $order_date = $this->input->post('order_date'.$i)[$j];
+                 $remark_2 = $this->input->post('remark'.$i)[$j];
+                 
+                 //Move shipment_term to general_order table 
+                // $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `bales`, `shipment_term`, `currency`, `price`)
+                // VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $bales, $shipment_term, $currency, $price));
               
+                $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `bales`, `currency`, `price`, `order_date`, `remark_2` )
+                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $bales, $currency, $price, $order_date, $remark_2));
+            
                  }
 
                     $general_order_details = $this->orders->general_order_info($general_order_id);
                     $shipment_order_details = $this->orders->getShipmentOrder($general_order_id);
 
-                    $check_mail = $this->login->checkGeneralOrderEmail();
+                    $check_mail = $this->login->checkGeneralOrderEmail($customer_id);
                    
-
                     $config = Array(
                         'protocol' => 'smtp',
                         'smtp_host' => 'master.herosite.pro',
@@ -246,7 +251,7 @@ class Home extends CI_Controller {
                                     <h3 align='center'>Hello, ".$check_mail['customer_name']." 
                                   <br> Your order has been placed.</h3>
                                  
-                                    <p> Your Order ID is : <strong> $order_id  </strong> <br> Shipment number is : <strong> $shipment_no </strong> 
+                                    <p> Shipment number is : <strong> $shipment_no </strong> 
                                     <br> Your order will dispatch on <strong> $dispatch_date </strong></p>
                                     <br>
                                     <div style='text-align: center;'>
@@ -275,7 +280,18 @@ class Home extends CI_Controller {
     </script>";
     }
 
-
+    public function shipmentNoCheck(){
+        $searchShipmentNo = $this->input->post('searchShipmentNo');
+        $data['searchShipmentNo'] = $searchShipmentNo;
+        $check_ship = $this->orders->checkShipmentNo($searchShipmentNo);
+        echo json_encode($check_ship);
+        if ($check_ship) {
+            return true;
+        } else {
+            // echo "false";
+            return false;
+        }
+    }
 }
 ?>
   

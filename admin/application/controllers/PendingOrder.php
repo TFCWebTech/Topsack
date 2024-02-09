@@ -45,6 +45,7 @@ class PendingOrder extends CI_Controller {
         $invoice_date = $this->input->post('invoice_date');
         $container_no = $this->input->post('container_no');
         $shipping_line = $this->input->post('shipping_line');
+        $shipping_line2 = $this->input->post('shipping_line2');
         $port_of_loading = $this->input->post('port_of_loading');
         $indian_scheduled_date = $this->input->post('indian_scheduled_date');
         $indian_actual_date = $this->input->post('indian_actual_date');
@@ -67,8 +68,8 @@ class PendingOrder extends CI_Controller {
         // $arrival_date1 = DateTime::createFromFormat('d/m/Y', $arrival_date);
         // $arrival_date1 = $arrival_date1->format('Y-m-d');
 
-        $this->db->query("UPDATE `general_order` SET `tsp_invoice_no`= ?, `invoive_date`= ?, `container_no`= ?, `shipping_line`= ?, `port_of_loading`= ?, `scheduled_date_indian_port`= ?, `actual_date_indian_port`= ?, `mother_port`= ?, `scheduled_date_mother_port`= ?, `actual_date_mother_port`= ?, `port_of_dest`= ?, `expected_date_of_arrival`= ?
-         WHERE `general_order_id`= ?", array($tsp_invoice_no, $invoice_date, $container_no, $shipping_line, $port_of_loading, $indian_scheduled_date, $indian_actual_date, $mother_port, $mother_scheduled_date, $mother_actual_date, $port_of_dest, $arrival_date, $general_order_id));
+        $this->db->query("UPDATE `general_order` SET `tsp_invoice_no`= ?, `invoive_date`= ?, `container_no`= ?, `shipping_line`= ?, `shipping_line2`=?, `port_of_loading`= ?, `scheduled_date_indian_port`= ?, `actual_date_indian_port`= ?, `mother_port`= ?, `scheduled_date_mother_port`= ?, `actual_date_mother_port`= ?, `port_of_dest`= ?, `expected_date_of_arrival`= ?
+         WHERE `general_order_id`= ?", array($tsp_invoice_no, $invoice_date, $container_no, $shipping_line, $shipping_line2, $port_of_loading, $indian_scheduled_date, $indian_actual_date, $mother_port, $mother_scheduled_date, $mother_actual_date, $port_of_dest, $arrival_date, $general_order_id));
         $this->session->set_flashdata('success', "added shipment details successfully");
         echo "<script> window.location.href = '".site_url('PendingOrder/orderDetails/'.$input_order_id)."';
         </script>";

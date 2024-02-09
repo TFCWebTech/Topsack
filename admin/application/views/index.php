@@ -19,6 +19,10 @@
         margin-top:20px;
     }
 
+#display-error{
+  display: none;
+  color: red;
+}
 </style>
 
 <input type="text" value="1" id="addfields" hidden>
@@ -289,6 +293,7 @@
                                         </div>
 
                                     </div>
+                                    <!-- <input type="text" value="<?php echo $value['customer_name']; ?>" > -->
 
                                     <div class="col-md-4">
                                         <div class="input-icons">
@@ -313,7 +318,8 @@
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-list"></i></span>
-                                            <input type="text" class="form-control"  placeholder="Enter Shipment No." name="shipment_no0" required>
+                                            <input type="text" class="form-control" id="shipmentNo" placeholder="Enter Shipment No." name="shipment_no0" onchange="checkShipmentNo()" required>
+                                            <p id="display-error"> This email is already exists.  </p>
                                         </div>                                                                
                                     </div>
 
@@ -328,8 +334,9 @@
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter Dispatch Date" name="dispatch_date0" id="dispatchDate"
-                                            onfocus="(this.type='date')"
+                                            <input type="text" class="form-control" placeholder="Enter Dispatch Date" name="dispatch_date0" 
+                                            id="dispatchDate"
+                                            onfocus="(this.type='week')"
                                             onblur="(this.type='text')" onchange="changeDate(this.value)" required>
                                         </div>
                                     </div>
@@ -350,6 +357,17 @@
                                                 <option value="LCL">LCL</option>
                                                 <option value="20' FCL">20' FCL</option>
                                                 <option value="40' FCL">40' FCL</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-icons">
+                                            <span class="input-group-addon"><i class="fa fa-ship"></i></span>
+                                            <select class="form-control" name="shipment_term0" required>
+                                                <option value="">Shipment Term</option>
+                                                <option value="FOB">FOB</option>
+                                                <option value="CIF">CIF</option>
+                                                <option value="DDU">DDU</option>
                                             </select>
                                         </div>
                                     </div>
@@ -402,17 +420,6 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <div class="input-icons">
-                                            <span class="input-group-addon"><i class="fa fa-ship"></i></span>
-                                            <select class="form-control" name="shipment_term0[]" required>
-                                                <option value="">Shipment Term</option>
-                                                <option value="FOB">FOB</option>
-                                                <option value="CIF">CIF</option>
-                                                <option value="DDU">DDU</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="input-icons">
@@ -434,7 +441,9 @@
                                             </div>
                                         </div>
                                         
-                                    </div>
+                                    </div>    
+                                        
+                                        
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -442,6 +451,13 @@
                                             onfocus="(this.type='date')" onblur="(this.type='text')" onchange="changeDate(this.value)" required>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="input-icons">
+                                            <span class="input-group-addon"><i class="fa fa-comments"></i></span>
+                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remark0[]" required>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="row">
 
@@ -610,6 +626,33 @@
 
 
 
+<script>
+  function checkShipmentNo(){
+    searchShipmentNo = $('#shipmentNo').val();
+    
+   $.ajax({
+    type: 'POST',
+            url: "<?php echo site_url('Home/shipmentNoCheck'); ?>",
+            datatype: "html",
+            data :{
+                searchShipmentNo: searchShipmentNo,
+            },
+            success: function(data) {
+                return data;
+              if(data == true){
+                // alert(data);
+                $('#display-error').show();
+                $('#shipmentNo').val('');
+
+                setTimeout(function() {
+                  $('#display-error').hide();
+                }, 5000);
+              }
+            }
+        })
+  }
+</script>
+
     <script>
         var qtyInput = document.getElementById('qty0');
         var palletsInput = document.getElementById('pallets0');
@@ -739,10 +782,9 @@
         var dynamicId = 'dynamic_' + Date.now();
         var newContainerId = 'container_' + dynamicId;
 
-        var data = '<div id="' + newContainerId + '" style="margin-top: 20px;"> <div class="row" id="' + dynamicId + '"> <div class="col-md-12 text-right d-flex justify-content-between"> <div class="serial-number px-3 mb-0"> <b>Sl. No.</b> ' + serialNumbers[containerId] + '</div><button onclick="deleteData(\'' + newContainerId + '\')" id="delete_data" type="button" style="background-color:transparent; border-color:transparent;"><i class="fa fa-trash-o" style="color:red; font-size:24px;"></i></button></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="text" class="form-control"  placeholder="Enter Order No / Item Code" name="order_no'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fas fa-arrows-alt-v"></i></span><input type="text" class="form-control" placeholder="Enter Dimension-External" name="dimension_external'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="number" class="form-control" placeholder="Enter QTY" name="qty'+count+'[]" id="qty' + dynamicId + '" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-cube"></i></span><input type="number" class="form-control" placeholder="Enter Packing" name="packing'+count+'[]" required></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-dot-circle-o"></i> </span><input type="number" class="form-control" placeholder="Enter Pallets" name="pallets'+count+'[]" id="pallets' + dynamicId + '" required ></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-line-chart"></i></span><input type="text" class="form-control" placeholder="Enter PAL / Bales" name="pal_bales'+count+'[]" id="pal_bales' + dynamicId + '" required readonly></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-ship"></i></span><select class="form-control" name="shipment_term'+count+'[]" required><option value="">Shipment Term</option><option value="FOB">FOB</option><option value="CIF">CIF</option><option value="DDU">DDU</option></select></div></div>  <div class="col-md-4"><div class="row"><div class="col-md-5"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><select class="form-control" name="currency'+count+'[]" required><option value="">Currency</option><option value="Euro">Euro</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="INR">INR</option></select></div></div><div class="col-md-7"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><input type="number" class="form-control" placeholder="Price" name="price'+count+'[]" step="any" required></div></div></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" placeholder="Order Date" name="order_date'+count+'[]" onfocus="(this.type=`date`)" onblur="(this.type=`text`)" onchange="changeDate(this.value)" required></div></div></div></div>';
+        var data = '<div id="' + newContainerId + '" style="margin-top: 20px;"> <div class="row" id="' + dynamicId + '"> <div class="col-md-12 text-right d-flex justify-content-between"> <div class="serial-number px-3 mb-0"> <b>Sl. No.</b> ' + serialNumbers[containerId] + '</div><button onclick="deleteData(\'' + newContainerId + '\')" id="delete_data" type="button" style="background-color:transparent; border-color:transparent;"><i class="fa fa-trash-o" style="color:red; font-size:24px;"></i></button></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="text" class="form-control"  placeholder="Enter Order No / Item Code" name="order_no'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fas fa-arrows-alt-v"></i></span><input type="text" class="form-control" placeholder="Enter Dimension-External" name="dimension_external'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="number" class="form-control" placeholder="Enter QTY" name="qty'+count+'[]" id="qty' + dynamicId + '" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-cube"></i></span><input type="number" class="form-control" placeholder="Enter Packing" name="packing'+count+'[]" required></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-dot-circle-o"></i> </span><input type="number" class="form-control" placeholder="Enter Pallets" name="pallets'+count+'[]" id="pallets' + dynamicId + '" required ></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-line-chart"></i></span><input type="text" class="form-control" placeholder="Enter PAL / Bales" name="pal_bales'+count+'[]" id="pal_bales' + dynamicId + '" required readonly></div></div>  <div class="col-md-4"><div class="row"><div class="col-md-5"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><select class="form-control" name="currency'+count+'[]" required><option value="">Currency</option><option value="Euro">Euro</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="INR">INR</option></select></div></div><div class="col-md-7"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><input type="number" class="form-control" placeholder="Price" name="price'+count+'[]" step="any" required></div></div></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" placeholder="Order Date" name="order_date'+count+'[]" onfocus="(this.type=`date`)" onblur="(this.type=`text`)" onchange="changeDate(this.value)" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-comments"></i></span><input type="text" class="form-control" placeholder="Order Remarks" name="remark'+count+'[]" required></div></div> </div></div>';
 
         $('#' + containerId).append(data);
-
 
         var qtyDynamicId = '#qty' + dynamicId;
         var palletsDynamicId = '#pallets' + dynamicId;
@@ -915,8 +957,6 @@ function hideB(x) {
     // Adjust the number of decimal places as needed
 }
 </script> -->
-
-
 
 
 

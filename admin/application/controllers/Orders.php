@@ -37,13 +37,29 @@ class Orders extends CI_Controller {
     }
     
 
+    // public function searchComData()
+    // {
+    //     $searchOrderID = $this->input->post('searchOrderID');
+    //     $data['searchOrderID'] = $searchOrderID;
+    //     // $data['order_data'] = $this->orders->getGeneralOrderData();
+    //     if($searchOrderID){
+    //         $data['order_data'] = $this->orders->getspecificCompOrderData($searchOrderID);
+    //     }else {
+    //         $data['order_data'] = $this->orders->getCompOrderData();
+    //     }
+    //     $this->load->view('filterd_orders',$data);
+    // }
     public function searchComData()
     {
         $searchOrderID = $this->input->post('searchOrderID');
         $data['searchOrderID'] = $searchOrderID;
+
+        $search_value = $this->input->post('search_value');
+        $data['search_value'] = $search_value;
+        
         // $data['order_data'] = $this->orders->getGeneralOrderData();
         if($searchOrderID){
-            $data['order_data'] = $this->orders->getspecificCompOrderData($searchOrderID);
+            $data['order_data'] = $this->orders->getspecificCompOrderData($searchOrderID , $search_value);
         }else {
             $data['order_data'] = $this->orders->getCompOrderData();
         }
@@ -117,7 +133,7 @@ class Orders extends CI_Controller {
                     <div style='background-color: #fff; color:#000 !important; padding: 0% 10%; text-align: center;'>
                         <h3 align='center'>Hello, ".$check_mail['customer_name']." 
                       <br> Your order has been dispatch.</h3>
-                        <p> Your Order ID is : <strong> $order_id </strong> <br> Shipment number is : <strong> $shipment_no </strong> 
+                        <p> Shipment number is : <strong> $shipment_no </strong> 
                        
                         <br>
                         <div style='text-align: center;'>
@@ -185,7 +201,7 @@ class Orders extends CI_Controller {
                     <div style='background-color: #fff; color:#000 !important; padding: 0% 10%; text-align: center;'>
                         <h3 align='center'>Hello, ".$check_mail['customer_name']." 
                       <br> Your order has been Completed.</h3>
-                        <p> Your Order ID is : <strong> $order_id2 </strong> <br> Shipment number is : <strong> $shipment_no2 </strong> 
+                        <p> Shipment number is : <strong> $shipment_no2 </strong> 
                         
                         <br>
                         <div style='text-align: center;'>

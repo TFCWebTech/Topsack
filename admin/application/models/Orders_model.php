@@ -58,7 +58,8 @@ class Orders_model extends CI_Model
     {
         $this->db->where('order_status =',2);
         $this->db->select('*');
-        $this->db->from('orders');
+        $this->db->from('orders as o');
+        $this->db->join('customer as c','o.customer_id = c.customer_id','left');
         $result = $this->db->get()->result_array();
         $outArr = array();
         foreach ($result as $row){
@@ -90,13 +91,46 @@ class Orders_model extends CI_Model
         }
         return $outArr;
     }
-    
-    public function getspecificCompOrderData($searchOrderID)
+     
+    // public function getspecificCompOrderData($searchOrderID, $search_value)
+    // {
+        // $this->db->where(['order_id' => $searchOrderID, 'order_status =' => 2]);
+    //     $this->db->order_by('o.order_id','DESC');
+    //     if($search_value === 'order_id'){
+    //     $this->db->where('o.'. $search_value, $searchOrderID, 'order_status =>', '2');
+    //     }elseif($search_value === 'shipment_no'){
+    //         $this->db->where('g.'. $search_value, $searchOrderID, 'order_status =>', '2');
+    //     }elseif($search_value === 'customer_name'){
+    //         // $this->db->where('c.'. $search_value, $searchOrderID);
+    //         $this->db->like('c.' . $search_value, $searchOrderID, 'order_status =>', '2');
+    //     }
+    //     $this->db->select('*');
+    //     $this->db->from('orders');
+    //     $result = $this->db->get()->result_array();
+    //     $outArr = array();
+    //     foreach ($result as $row){
+    //         $row['general_order'] = $this->getOrderData($row['order_id']);
+    //         $outArr[] = $row;
+    //     }
+    //     return $outArr;
+    // }
+    public function getspecificCompOrderData($searchOrderID, $search_value)
     {
-        
-        $this->db->where(['order_id' => $searchOrderID, 'order_status =' => 2]);
+        $this->db->order_by('o.order_id', 'DESC');
+        if ($search_value === 'order_id') {
+            $this->db->where('o.' . $search_value, $searchOrderID);
+            $this->db->where('order_status', '2');
+        } elseif ($search_value === 'shipment_no') {
+            $this->db->where('g.' . $search_value, $searchOrderID);
+            $this->db->where('order_status', '2');
+        } elseif ($search_value === 'customer_name') {
+            $this->db->like('c.' . $search_value, $searchOrderID);
+            $this->db->where('order_status', '2');
+        }
         $this->db->select('*');
-        $this->db->from('orders');
+        $this->db->from('orders as o');
+        $this->db->join('general_order as g','o.order_id = g.order_id','left');
+        $this->db->join('customer as c','o.customer_id = c.customer_id','left');
         $result = $this->db->get()->result_array();
         $outArr = array();
         foreach ($result as $row){
@@ -105,7 +139,7 @@ class Orders_model extends CI_Model
         }
         return $outArr;
     }
-  
+    
     public function getOrderData($order_id)
     {
         $this->db->where('order_id', $order_id);
@@ -169,6 +203,14 @@ class Orders_model extends CI_Model
         $this->db->select('order_status');
         $this->db->from('orders');
         return $this->db->get()->result_array();
+    }
+
+
+    public function checkShipmentNo($searchShipmentNo)
+    {
+    	$sql="SELECT * FROM  `general_order` WHERE `shipment_no`= '$searchShipmentNo' ";
+        $query = $this->db->query($sql);
+        return $query->row_array();
     }
    
 }

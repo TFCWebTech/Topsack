@@ -72,20 +72,36 @@
 #completedOrder {
     margin-left: 70px;
 }
+
+
+ .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+
+.see-more-btn {
+    cursor: pointer;
+    color: blue;
+    }
 </style>
 
 <div class="container-fluid">
 
     <?php
-    foreach ($order_data as $value) { 
-      if ($value['order_id'] == $order_id) {
-         ?>
+        foreach ($order_data as $value) { 
+         if ($value['order_id'] == $order_id) {
+
+             $shipmentSlNo = 0;
+                foreach ($value['general_order'] as $generalOrder) {
+                $shipmentSlNo ++;
+    ?>
 
 
     <div class="card card-stepper shadow ">
         <div class="card-header py-3 ">
-            <!-- <?php echo $order_id; ?> -->
-            <h6 class="m-0 font-weight-bold ">Order ID :<span> <?php echo $order_id; ?> </span></h6>
+            <h6 class="m-0 font-weight-bold " hidden>Order ID :<span> <?php echo $order_id; ?> </span></h6>
+            <h6 class="m-0 font-weight-bold " >Shipment No :<span> <?php echo $generalOrder['shipment_no']; ?> </span></h6>
         </div>
 
         <div class="card-body">
@@ -154,13 +170,7 @@
                             </div>
                         </div>
                     </div>
-                    <?php
-                                $shipmentSlNo = 0;
-                            // foreach ($order_data as $value) { 
-                                foreach ($value['general_order'] as $generalOrder) {
-                                    $shipmentSlNo ++;
-                                //  if ($value['order_id'] == $order_id) {
-                                    ?>
+                 
 
 
                     <div class="tab-content ml-2">
@@ -195,7 +205,7 @@
                                                             <h6 class="fw-normal mb-0">
                                                                 <a id="addShippingDetailsLink" class="pointer"
                                                                     data-toggle="modal" data-target="#myModal"
-                                                                    onclick="addShippingDetails('<?php echo $generalOrder['general_order_id']; ?>', '<?php echo $generalOrder['tsp_invoice_no']; ?>', '<?php echo $generalOrder['invoive_date']; ?>','<?php echo $generalOrder['container_no']; ?>', '<?php echo $generalOrder['shipping_line']; ?>', '<?php echo $generalOrder['port_of_loading']; ?>','<?php echo $generalOrder['scheduled_date_indian_port']; ?>','<?php echo $generalOrder['actual_date_indian_port']; ?>','<?php echo $generalOrder['mother_port']; ?>','<?php echo $generalOrder['scheduled_date_mother_port']; ?>','<?php echo $generalOrder['actual_date_mother_port']; ?>','<?php echo $generalOrder['port_of_dest']; ?>','<?php echo $generalOrder['expected_date_of_arrival']; ?>')"
+                                                                    onclick="addShippingDetails('<?php echo $generalOrder['general_order_id']; ?>', '<?php echo $generalOrder['tsp_invoice_no']; ?>', '<?php echo $generalOrder['invoive_date']; ?>','<?php echo $generalOrder['container_no']; ?>', '<?php echo $generalOrder['shipping_line']; ?>', '<?php echo $generalOrder['shipping_line2']; ?>', '<?php echo $generalOrder['port_of_loading']; ?>','<?php echo $generalOrder['scheduled_date_indian_port']; ?>','<?php echo $generalOrder['actual_date_indian_port']; ?>','<?php echo $generalOrder['mother_port']; ?>','<?php echo $generalOrder['scheduled_date_mother_port']; ?>','<?php echo $generalOrder['actual_date_mother_port']; ?>','<?php echo $generalOrder['port_of_dest']; ?>','<?php echo $generalOrder['expected_date_of_arrival']; ?>')"
                                                                     style="color:#4e73df;">
                                                                     <u><b> Add Shipping Details</b></u>
                                                                 </a>
@@ -250,18 +260,7 @@
                                                                         <span class="fw-bold text-body remarks-text truncate"><?php echo $remark; ?></span>
                                                                         <span class="see-more-btn" onclick="toggleRemarks(<?php echo $shipmentSlNo; ?>)">See more</span>
                                                                     </div> -->
-                                                <style>
-                                                .truncate {
-                                                    white-space: nowrap;
-                                                    overflow: hidden;
-                                                    text-overflow: ellipsis;
-                                                }
 
-                                                .see-more-btn {
-                                                    cursor: pointer;
-                                                    color: blue;
-                                                }
-                                                </style>
 
 
                                                 <?php 
@@ -269,13 +268,18 @@
                                                                     $truncatedRemarks = strlen($remarks) > 20 ? substr($remarks, 0, 20) . '...' : $remarks;
 
                                                                     ?>
-                                                <div class="col-md-4">
+                                                <div class="col-md-2">
                                                     <b> Remarks : </b>
                                                     <span
                                                         class="fw-bold text-body remarks-text"><?php echo $truncatedRemarks; ?></span>
                                                     <span class="full-text"
                                                         style="display: none;"><?php echo $remarks; ?></span>
 
+                                                </div>
+                                                <div class="col-md-2 ">
+                                                    <p class="text-muted pl-2"><b> Shipment Term : </b> <span
+                                                            class="fw-bold text-body"><?php echo $generalOrder['shipmentTerm']; ?></span>
+                                                    </p>
                                                 </div>
                                                 <div class="col-md-2 ">
                                                     <p class="text-muted pl-2"><b> Size-FCL : </b> <span
@@ -290,12 +294,13 @@
                                                         <tr>
                                                             <th>Sl. No. </th>
                                                             <th>Order No </th>
+                                                            <th>Order Date </th>
                                                             <th>Dimension External </th>
                                                             <th>QTY </th>
                                                             <th>Packing </th>
                                                             <th>Pallets </th>
                                                             <th>PAL/Bales </th>
-                                                            <th>Shipment Term </th>
+                                                            <!-- <th>Shipment Term </th> -->
                                                             <th>Currency </th>
                                                             <th>Price </th>
 
@@ -310,12 +315,13 @@
 
                                                         <td> <?php echo $slNo; ?> </td>
                                                         <td> <?php echo $shipmentOrder['order_no']; ?></td>
+                                                        <td> <?php echo $shipmentOrder['order_date']; ?></td>
                                                         <td> <?php echo $shipmentOrder['dimension_external']; ?></td>
                                                         <td> <?php echo $shipmentOrder['qty']; ?></td>
                                                         <td> <?php echo $shipmentOrder['packing']; ?></td>
                                                         <td> <?php echo $shipmentOrder['pallets']; ?></td>
                                                         <td> <?php echo $shipmentOrder['bales']; ?></td>
-                                                        <td> <?php echo $shipmentOrder['shipment_term']; ?></td>
+                                                        <!-- <td> <?php echo $shipmentOrder['shipment_term']; ?></td> -->
                                                         <td> <?php echo $shipmentOrder['currency']; ?></td>
                                                         <td> <?php echo $shipmentOrder['price']; ?></td>
 
@@ -473,7 +479,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="Shipping Line">Shipping Line:</label>
-                                    <select class="form-control" name="shipping_line" id="shipping_line" required>
+                                    <select class="form-control" name="shipping_line" id="shipping_line" onchange="toggleShippingLine2()"  required>
                                         <option>Select</option>
                                         <option value="MSC">MSC</option>
                                         <option value="CMA">CMA</option>
@@ -484,9 +490,18 @@
                                         <option value="ZIM LINE">ZIM LINE</option>
                                         <option value="PIL">PIL</option>
                                         <option value="YML">YML</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-sm-6" id="shipping_line2_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="Shipping Line">Shipping Line:</label>
+                                    <input type="text" class="form-control" placeholder="Enter Shipping Line"
+                                        name="shipping_line2" id="shipping_line2" required>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="Shipping Line">Port Of Loading:</label>
@@ -719,7 +734,7 @@ function changeDate(date) {
 </script>
 
 <script>
-function addShippingDetails(generalOrderId, tsp_invoice_no, invoive_date, container_no, shipping_line, port_of_loading,
+function addShippingDetails(generalOrderId, tsp_invoice_no, invoive_date, container_no, shipping_line, shipping_line2, port_of_loading,
     scheduled_date_indian_port, actual_date_indian_port, mother_port, scheduled_date_mother_port,
     actual_date_mother_port, port_of_dest, expected_date_of_arrival) {
     document.getElementById('hiddenGeneralOrderId').value = generalOrderId;
@@ -730,6 +745,14 @@ function addShippingDetails(generalOrderId, tsp_invoice_no, invoive_date, contai
     $('#invoice_date').val(invoive_date);
     $('#container_no').val(container_no);
     $('#shipping_line').val(shipping_line);
+    if (shipping_line2 != '') {
+        $('#shipping_line2_div').show();
+        $('#shipping_line2').val(shipping_line2).show();
+      // Clear the value and hide the field
+    } else {
+        $('#shipping_line2').val('').hide(); 
+        // Set value and show the field
+    }
     $('#port_of_loading').val(port_of_loading);
     $('#indian_scheduled_date').val(scheduled_date_indian_port);
     $('#indian_actual_date').val(actual_date_indian_port);
@@ -808,5 +831,18 @@ function toggleRemarks(ren_no) {
     // Toggle the See more / See less text on the button
     var seeMoreBtn = document.querySelector('#' + dynamicId + ' .see-more-btn');
     seeMoreBtn.textContent = remarksText.classList.contains('truncate') ? 'See more' : 'See less';
+}
+</script>
+
+<script>
+    function toggleShippingLine2() {
+    var select = document.getElementById("shipping_line");
+    var shippingLine2Div = document.getElementById("shipping_line2_div");
+    var selectedValue = select.options[select.selectedIndex].value;
+    if (selectedValue === "Other") {
+        shippingLine2Div.style.display = "block";
+    } else {
+        shippingLine2Div.style.display = "none";
+    }
 }
 </script>

@@ -17,15 +17,15 @@ class Login_model extends CI_Model
         return $query->row_array();
     }
 
-    public function checkGeneralOrderEmail()
+    public function checkGeneralOrderEmail($customer_id)
     {
     	$sql="SELECT * FROM  `customer` ";
         $query = $this->db->query($sql);
         return $query->row_array();
-        // $this->db->select('g.*, c.customer_name');
-        // $this->db->where('email', $email);
-        // $this->db->from('general_order as g');
-        // $this->db->join('customer as c','g.customer_id = c.customer_id','left');
+        // $this->db->select('*');
+        // $this->db->from('orders as g');
+        // $this->db->join('customer as c', 'g.customer_id = c.customer_id', 'left');
+        // $this->db->where('g.customer_id', $customer_id);
         // return $this->db->get()->result_array();
     }
     

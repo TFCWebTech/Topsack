@@ -361,7 +361,7 @@
                     <input type="text" name="confirm_dis_order" value="1" hidden>
                     <input type="text" name="order_id" id="hiddenOrderId" value="" hidden>
                     <input type="text" name="C_email" id="hiddenOrderEmail" value="" hidden>
-                    <input type="text" name="shipment_no" id="shipment_no" value="" hidden>
+                    <input type="text" name="shipment_no" id="shipment_no1" value="" hidden>
                     <input type="text" name="dispatch_data" id="dispatch_data" value="" hidden>
                     <input type="text" name="re_url" value="<?php echo $this->router->fetch_class(); ?>" hidden>
 
@@ -373,7 +373,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal2" role="dialog">
+<div class="modal fade" id="myModal2" role="dialog">    
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -404,7 +404,7 @@ function dispatchOrder(order_id, customer_email, shipment_no, dispatch_data) {
 
     document.getElementById('hiddenOrderId').value = order_id;
     document.getElementById('hiddenOrderEmail').value = customer_email;
-    document.getElementById('shipment_no').value = shipment_no;
+    document.getElementById('shipment_no1').value = shipment_no;
     document.getElementById('dispatch_data').value = dispatch_data;
 }
 
