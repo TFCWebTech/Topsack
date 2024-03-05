@@ -228,7 +228,7 @@
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                             <input type="text" class="form-control" placeholder="Enter Estimated Dispatch Date" name="estimated_dispatch_date"  id="estimatedDate"
-                                            onfocus="(this.type='date')" onblur="(this.type='text')" onchange="sampleRequestDate(this.value)" required>
+                                            onfocus="(this.type='date')" onblur="(this.type='text')" onchange="sampleRequestDate(this.value)" >
                                         </div>
 
                                     </div>
@@ -236,7 +236,7 @@
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                             <input type="text" class="form-control" placeholder="Enter Confirmed Dispatch Date" id="confirmDate" name="confirmed_dispatch_date"
-                                            onfocus="(this.type='date')" onblur="(this.type='text')" onchange="sampleRequestDate(this.value)" required>
+                                            onfocus="(this.type='date')" onblur="(this.type='text')" onchange="sampleRequestDate(this.value)" >
                                         </div>
 
                                     </div>
@@ -265,7 +265,7 @@
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-comment"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remarks" required>
+                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remarks" >
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -319,7 +319,7 @@
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-list"></i></span>
                                             <input type="text" class="form-control" id="shipmentNo" placeholder="Enter Shipment No." name="shipment_no0" onchange="checkShipmentNo()" required>
-                                            <p id="display-error"> This email is already exists.  </p>
+                                            <p id="display-error"> This shipment no is already exists.  </p>
                                         </div>                                                                
                                     </div>
 
@@ -344,7 +344,7 @@
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-comments"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remarks0" required>
+                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remarks0" >
                                         </div>
                                     </div>
 
@@ -397,27 +397,27 @@
                                             <input type="number" class="form-control" placeholder="Enter QTY" name="qty0[]" id="qty0" required>
                                         </div>
                                     </div>
-
+                                        <!-- Here we change formula qty/palletes == pal/bales replace by qty/packing = palltes -->
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-cube"></i></span>
-                                            <input type="number" class="form-control" placeholder="Enter Packing" name="packing0[]"  required>
+                                            <input type="number" class="form-control" placeholder="Enter Packing" name="packing0[]" id="pallets0"  required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class='fa fa-dot-circle-o'></i></span>
-                                            <input type="number" class="form-control" placeholder="Enter Pallets" name="pallets0[]" id="pallets0" required>
+                                            <input type="number" class="form-control" placeholder="Enter Pallets" name="pallets0[]" id="pal_bales0" readonly>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <!-- <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-line-chart"></i></span>
                                             <input type="text" class="form-control" placeholder="Enter PAL / Bales" name="pal_bales0[]" id="pal_bales0" readonly>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-md-4">
                                         <div class="row">
@@ -454,7 +454,7 @@
                                     <div class="col-md-4">
                                         <div class="input-icons">
                                             <span class="input-group-addon"><i class="fa fa-comments"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remark0[]" required>
+                                            <input type="text" class="form-control" placeholder="Enter Remarks" name="remark0[]" >
                                         </div>
                                     </div>
 
@@ -633,13 +633,13 @@
    $.ajax({
     type: 'POST',
             url: "<?php echo site_url('Home/shipmentNoCheck'); ?>",
-            datatype: "html",
+            dataType: "json",
             data :{
                 searchShipmentNo: searchShipmentNo,
             },
             success: function(data) {
-                return data;
-              if(data == true){
+                
+            if (data === true || data === "true") {
                 // alert(data);
                 $('#display-error').show();
                 $('#shipmentNo').val('');
@@ -782,7 +782,7 @@
         var dynamicId = 'dynamic_' + Date.now();
         var newContainerId = 'container_' + dynamicId;
 
-        var data = '<div id="' + newContainerId + '" style="margin-top: 20px;"> <div class="row" id="' + dynamicId + '"> <div class="col-md-12 text-right d-flex justify-content-between"> <div class="serial-number px-3 mb-0"> <b>Sl. No.</b> ' + serialNumbers[containerId] + '</div><button onclick="deleteData(\'' + newContainerId + '\')" id="delete_data" type="button" style="background-color:transparent; border-color:transparent;"><i class="fa fa-trash-o" style="color:red; font-size:24px;"></i></button></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="text" class="form-control"  placeholder="Enter Order No / Item Code" name="order_no'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fas fa-arrows-alt-v"></i></span><input type="text" class="form-control" placeholder="Enter Dimension-External" name="dimension_external'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="number" class="form-control" placeholder="Enter QTY" name="qty'+count+'[]" id="qty' + dynamicId + '" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-cube"></i></span><input type="number" class="form-control" placeholder="Enter Packing" name="packing'+count+'[]" required></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-dot-circle-o"></i> </span><input type="number" class="form-control" placeholder="Enter Pallets" name="pallets'+count+'[]" id="pallets' + dynamicId + '" required ></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-line-chart"></i></span><input type="text" class="form-control" placeholder="Enter PAL / Bales" name="pal_bales'+count+'[]" id="pal_bales' + dynamicId + '" required readonly></div></div>  <div class="col-md-4"><div class="row"><div class="col-md-5"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><select class="form-control" name="currency'+count+'[]" required><option value="">Currency</option><option value="Euro">Euro</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="INR">INR</option></select></div></div><div class="col-md-7"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><input type="number" class="form-control" placeholder="Price" name="price'+count+'[]" step="any" required></div></div></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" placeholder="Order Date" name="order_date'+count+'[]" onfocus="(this.type=`date`)" onblur="(this.type=`text`)" onchange="changeDate(this.value)" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-comments"></i></span><input type="text" class="form-control" placeholder="Order Remarks" name="remark'+count+'[]" required></div></div> </div></div>';
+        var data = '<div id="' + newContainerId + '" style="margin-top: 20px;"> <div class="row" id="' + dynamicId + '"> <div class="col-md-12 text-right d-flex justify-content-between"> <div class="serial-number px-3 mb-0"> <b>Sl. No.</b> ' + serialNumbers[containerId] + '</div><button onclick="deleteData(\'' + newContainerId + '\')" id="delete_data" type="button" style="background-color:transparent; border-color:transparent;"><i class="fa fa-trash-o" style="color:red; font-size:24px;"></i></button></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="text" class="form-control"  placeholder="Enter Order No / Item Code" name="order_no'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fas fa-arrows-alt-v"></i></span><input type="text" class="form-control" placeholder="Enter Dimension-External" name="dimension_external'+count+'[]" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-list"></i></span><input type="number" class="form-control" placeholder="Enter QTY" name="qty'+count+'[]" id="qty' + dynamicId + '" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-cube"></i></span><input type="number" class="form-control" placeholder="Enter Packing" name="packing'+count+'[]" id="pallets' + dynamicId + '" required></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-dot-circle-o"></i> </span><input type="number" class="form-control" placeholder="Enter Pallets" name="pallets'+count+'[]" id="pal_bales' + dynamicId + '" required readonly></div></div> <div class="col-md-4"><div class="row"><div class="col-md-5"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><select class="form-control" name="currency'+count+'[]" required><option value="">Currency</option><option value="Euro">Euro</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="INR">INR</option></select></div></div><div class="col-md-7"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-money"></i></span><input type="number" class="form-control" placeholder="Price" name="price'+count+'[]" step="any" required></div></div></div></div><div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" placeholder="Order Date" name="order_date'+count+'[]" onfocus="(this.type=`date`)" onblur="(this.type=`text`)" onchange="changeDate(this.value)" required></div></div> <div class="col-md-4"><div class="input-icons"><span class="input-group-addon"><i class="fa fa-comments"></i></span><input type="text" class="form-control" placeholder="Order Remarks" name="remark'+count+'[]" ></div></div> </div></div>';
 
         $('#' + containerId).append(data);
 

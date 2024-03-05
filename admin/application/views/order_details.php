@@ -59,7 +59,7 @@
     .col-md-8 {
 
         padding-right: 1rem !important;
-        padding-left: 0rem !important;
+        padding-left: 0.5rem !important;
     }
 }
 
@@ -299,11 +299,11 @@
                                                             <th>QTY </th>
                                                             <th>Packing </th>
                                                             <th>Pallets </th>
-                                                            <th>PAL/Bales </th>
+                                                            <!-- <th>PAL/Bales </th> -->
                                                             <!-- <th>Shipment Term </th> -->
                                                             <th>Currency </th>
                                                             <th>Price </th>
-
+                                                            <th>Remark</th>
                                                         </tr>
                                                     </thead>
                                                     <?php 
@@ -320,11 +320,11 @@
                                                         <td> <?php echo $shipmentOrder['qty']; ?></td>
                                                         <td> <?php echo $shipmentOrder['packing']; ?></td>
                                                         <td> <?php echo $shipmentOrder['pallets']; ?></td>
-                                                        <td> <?php echo $shipmentOrder['bales']; ?></td>
+                                                        <!-- <td> <?php echo $shipmentOrder['bales']; ?></td> -->
                                                         <!-- <td> <?php echo $shipmentOrder['shipment_term']; ?></td> -->
                                                         <td> <?php echo $shipmentOrder['currency']; ?></td>
                                                         <td> <?php echo $shipmentOrder['price']; ?></td>
-
+                                                        <td> <?php echo $shipmentOrder['remark_2']; ?></td>
                                                     </tr>
                                                     <?php } 
                                                                 ?>
@@ -374,7 +374,17 @@
                                             <tr class="table-responsive">
                                                 <td><b>Container No :</b> <?php echo $generalOrder['container_no']; ?>
                                                 </td>
-                                                <td><b>Shipping Line :</b> <?php echo $generalOrder['shipping_line']; ?>
+                                                <?php 
+                                                if($generalOrder['shipping_line'] == 'Other'){
+                                                    ?>
+                                                    <td><b>Shipping Line :</b> <?php echo $generalOrder['shipping_line2'];?> 
+                                                <?php     
+                                                }else{ 
+                                                    ?>     
+                                                     <td><b>Shipping Line :</b> <?php echo $generalOrder['shipping_line'];?> 
+                                                <?php }
+                                                ?>
+                                               
                                                 </td>
                                                 <td><b>Port Of Loading
                                                         :</b><?php echo $generalOrder['port_of_loading']; ?></td>
@@ -498,7 +508,7 @@
                                 <div class="form-group">
                                     <label for="Shipping Line">Shipping Line:</label>
                                     <input type="text" class="form-control" placeholder="Enter Shipping Line"
-                                        name="shipping_line2" id="shipping_line2" required>
+                                        name="shipping_line2" id="shipping_line2" disabled required>
                                 </div>
                             </div>
 
@@ -645,7 +655,7 @@
                                 <div class="form-group">
                                     <label for="Dispatch Date">Update Dispatch Date:</label>
                                     <input type="text" class="form-control" placeholder="Enter Dispatch Date"
-                                        name="dispatch_date" onfocus="(this.type='date')" onblur="(this.type='text')"
+                                        name="dispatch_date" onfocus="(this.type='week')" onblur="(this.type='text')"
                                         id="updateDispatchDate" value="" required>
                                 </div>
                             </div>
@@ -747,10 +757,11 @@ function addShippingDetails(generalOrderId, tsp_invoice_no, invoive_date, contai
     $('#shipping_line').val(shipping_line);
     if (shipping_line2 != '') {
         $('#shipping_line2_div').show();
+        // $('#shipping_line2').val('').show(); 
         $('#shipping_line2').val(shipping_line2).show();
       // Clear the value and hide the field
     } else {
-        $('#shipping_line2').val('').hide(); 
+        $('#shipping_line2').val('').show(); 
         // Set value and show the field
     }
     $('#port_of_loading').val(port_of_loading);
@@ -836,13 +847,17 @@ function toggleRemarks(ren_no) {
 
 <script>
     function toggleShippingLine2() {
-    var select = document.getElementById("shipping_line");
-    var shippingLine2Div = document.getElementById("shipping_line2_div");
-    var selectedValue = select.options[select.selectedIndex].value;
-    if (selectedValue === "Other") {
-        shippingLine2Div.style.display = "block";
-    } else {
-        shippingLine2Div.style.display = "none";
+        var select = document.getElementById("shipping_line");
+        var shippingLine2Div = document.getElementById("shipping_line2_div");
+        var shippingLine2Input = document.getElementById("shipping_line2");
+        var selectedValue = select.options[select.selectedIndex].value;
+
+        if (selectedValue == "Other") {
+            shippingLine2Div.style.display = "block";
+            shippingLine2Input.disabled = false; // Enable the input field
+        } else {
+            shippingLine2Div.style.display = "none";
+            shippingLine2Input.disabled = true; // Disable the input field
+        }
     }
-}
 </script>

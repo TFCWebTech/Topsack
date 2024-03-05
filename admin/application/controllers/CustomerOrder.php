@@ -25,7 +25,7 @@ class CustomerOrder extends CI_Controller {
     {
         $data['order_id'] = $order_id;
         
-        $data['order_data'] = $this->customer->getGeneralOrderData();
+        $data['order_data'] = $this->customer->getGeneralOrderData($order_id);
         $this->load->view('customer/customer_order_details',$data);
     }
 

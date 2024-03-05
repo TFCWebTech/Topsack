@@ -61,8 +61,6 @@ width: 95%;
 </style>
 <div class="container-fluid">
   
-
-    
     <div class="card-header py-3 d-flex justify-content-between">
         <h3 class="m-0 font-weight-bold text-primary">Transit Details</h3>
         <!-- <div></div> -->
@@ -77,13 +75,14 @@ width: 95%;
                 <div class="input-group">
                     <div class="form-group">
                         <select class="form-control" name="search_value" id="search_value" required>
-                            <option>Select</option>
+                            <option value="" disabled selected>Select</option>
                             <option value="customer_name">Customer Name </option>
                             <option value="shipment_no">Shipment No</option>
                             <!-- <option value="order_id">Order ID</option> -->
-
                         </select>
+                        <div id="error_message" style="color: red; display: none;">Please select an option.</div>
                     </div>
+                    
                     <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput"
                         id="searchOrderInput" placeholder="Search " aria-label="Search"
                         aria-describedby="basic-addon2" onkeypress="handleKeyPress(event)">
@@ -101,7 +100,10 @@ width: 95%;
 <section class="gradient-custom-2" id="searchOrderId">
 <div class="container  h-100">
   <?php
-    if (!empty($order_data)) {
+  
+  if(!$order_data) { ?>
+    <h5 class="text-center mt-3">No Record Found!</h5>
+  <?php }  
   foreach ($order_data as $value) { 
     // foreach ($value['general_order'] as $generalOrder) {
       foreach ($value['general_order'] as $generalOrder) {
@@ -217,12 +219,11 @@ width: 95%;
          
       </div>
       <?php
-              } 
+              // } 
             }
           }
-        }else {
-          echo '<div class="text-center mt-4">No record found.</div>';
-      }
+        }
+      //  
         ?>
     </div>
 </section>
@@ -317,6 +318,13 @@ function searchOrder() {
     // alert('cliekd');
     searchOrderID = $('#searchOrderInput').val();
     search_value = $('#search_value').val();
+    if (!search_value) {
+        $('#error_message').show(); // Show error message
+        return; // Exit function
+    } else {
+        $('#error_message').hide(); // Hide error message if it's currently shown
+    }
+
 
     $.ajax({
         type: 'POST',

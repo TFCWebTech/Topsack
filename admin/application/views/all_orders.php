@@ -184,12 +184,13 @@
                 <div class="input-group">
                     <div class="form-group">
                         <select class="form-control" name="search_value" id="search_value" required>
-                            <option>Select</option>
+                            <option value="">Select</option>
                             <option value="customer_name">Customer Name </option>
                             <option value="shipment_no">Shipment No</option>
                             <!-- <option value="order_id">Order ID</option> -->
 
                         </select>
+                        <div id="error_message" style="color: red; display: none;">Please select an option.</div>
                     </div>
                     <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput"
                         id="searchOrderInput" placeholder="Search " aria-label="Search"
@@ -428,6 +429,12 @@ function searchOrder() {
     // alert('cliekd');
     searchOrderID = $('#searchOrderInput').val();
     search_value = $('#search_value').val();
+    if (!search_value) {
+        $('#error_message').show(); // Show error message
+        return; // Exit function
+    } else {
+        $('#error_message').hide(); // Hide error message if it's currently shown
+    }
 
     $.ajax({
         type: 'POST',

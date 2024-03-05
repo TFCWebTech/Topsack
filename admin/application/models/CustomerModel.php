@@ -28,12 +28,21 @@ class CustomerModel extends CI_Model
         return $query->row_array();
     }
 
+    // public function getOrders($customer_id){
+   
+    //     $this->db->where('o.customer_id', $customer_id);
+    //     $this->db->select('*');
+    //     $this->db->from('orders as o');
+    //     $this->db->join('general_order as g','g.order_id =o.order_id','left');
+    //     $this->db->order_by('order_id','DESC');
+    //     return $this->db->get()->result_array();
+    // }
     public function getOrders($customer_id){
-        // $this->db->order_by('order_id','DESC');
-        $this->db->where('o.customer_id', $customer_id);
         $this->db->select('*');
         $this->db->from('orders as o');
-        $this->db->join('general_order as g','g.order_id =o.order_id','left');
+        $this->db->join('general_order as g','g.order_id = o.order_id','left');
+        $this->db->where('o.customer_id', $customer_id);
+        $this->db->order_by('o.order_id', 'DESC'); // Specify the table alias for order_id
         return $this->db->get()->result_array();
     }
 
@@ -61,6 +70,7 @@ class CustomerModel extends CI_Model
     $this->db->select('*');
     $this->db->from('orders as o');
     $this->db->join('general_order as g','g.order_id =o.order_id','left');
+    $this->db->order_by('o.order_id', 'DESC');
     $result = $this->db->get()->result_array();
     $outArr = array();
     foreach ($result as $row) {

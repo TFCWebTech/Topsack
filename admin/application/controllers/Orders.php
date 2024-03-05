@@ -101,7 +101,7 @@ class Orders extends CI_Controller {
         $this->session->set_flashdata('success', "order update successfully");
 
 
-        $check_mail = $this->login->checkGeneralOrderEmail();
+        $check_mail = $this->login->checkGeneralOrderEmail($order_id);
         $config = Array(
             'protocol' => 'smtp',
             'smtp_host' => 'master.herosite.pro',
@@ -169,7 +169,7 @@ class Orders extends CI_Controller {
        
         $this->session->set_flashdata('success', "order update successfully");
 
-        $check_mail = $this->login->checkGeneralOrderEmail();
+        $check_mail = $this->login->checkGeneralOrderEmail($order_id2);
         $config = Array(
             'protocol' => 'smtp',
             'smtp_host' => 'master.herosite.pro',

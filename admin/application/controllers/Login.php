@@ -170,7 +170,7 @@ class Login extends CI_Controller {
 			// echo $login_id;
             $this->login->updateCustomer('customer', 'customer_id', $customer_id, $data);
             $this->session->set_flashdata('success', 'Password generated Successfully');
-            redirect('Login');
+            redirect('CustomerLogin');
         }
     }
 
@@ -204,22 +204,23 @@ class Login extends CI_Controller {
             $mail_data['login_id'] = $check_mail['login_id'];
             $mail_data['type'] = $check_mail['type'];
             $mail_data['token'] = $randomString;
-
-            $config = Array(
-				'protocol' => 'smtp',
-				'smtp_host' => 'master.herosite.pro',
-				'_smtp_auth' => TRUE,
-				'smtp_port' => 465,
-				'smtp_user' => 'admin@pressbro.com',
-				'smtp_pass' => 'Vajra@5566',
-				'smtp_crypto'   => 'ssl',
-				'mailtype' => 'html',
-				'charset' => 'utf-8'
-			);
+            // redirect('Login');
+            $config = array(
+                'protocol' => 'smtp',
+                'smtp_host' => 'smtp.mailtrap.io',
+                '_smtp_auth' => TRUE,
+                'smtp_port' => 587, // or 465 for SSL
+                'smtp_user' => 'cce4c0db82ac7f',
+                'smtp_pass' => 'de619eae625e82',
+                'mailtype' => 'html',
+                'charset' => 'utf-8',
+                'newline' => "\r\n", // Add this line
+                'smtp_debug' => TRUE
+            );
+            
             $this->load->library('email', $config);
-            $this->email->set_newline("\r\n");
             $this->email->set_mailtype("html");
-            $this->email->from('admin@pressbro.com', 'Topsack-Packaging');
+            $this->email->from('admin@topsack.com', 'Topsack-Packaging');
             $this->email->to($email);
             $this->email->subject('Forgot Password!');
             
@@ -244,16 +245,24 @@ class Login extends CI_Controller {
                     </body>.
                     </html>";
             $this->email->message($msg);
-            
+            echo $this->email->print_debugger();
             $result = $this->email->send();
-            
-            if($result) {
-                $this->session->set_flashdata('success','Email is Sent');
-            } else {
-                $this->session->set_flashdata('error','Email is not sent');
-            }
+            if($this->email->send())
+                {
+                echo "Success! - An email has been sent to ".$to;
+                }
+                else
+                { 
+                show_error($this->email->print_debugger());
+                return false;
+                }
+            // if($result) {
+            //     $this->session->set_flashdata('success','Email is Sent');
+            // } else {
+            //     $this->session->set_flashdata('error','Email is not sent');
+            // }
         }
-        redirect('Login');
+        // redirect('Login');
     }
  	
  	public function Logout()

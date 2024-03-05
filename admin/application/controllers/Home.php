@@ -80,9 +80,9 @@ class Home extends CI_Controller {
     );
     // print_r($data);
     $this->orders->insert('sample_request', $data);
+    $sample_request_id  = $this->db->insert_id($sample_request_id);
    
-   
-    $check_mail = $this->login->checkGeneralOrderEmail();
+    $check_mail = $this->login->getSampleOrderCustomerName($sample_request_id);
     $sample_request_details = $this->orders->sample_request_info($customer_id);
 
     $config = Array(
@@ -101,7 +101,7 @@ class Home extends CI_Controller {
     $this->email->set_mailtype("html");
     $this->email->from('admin@pressbro.com', 'Topsack-Packaging');
     $this->email->to($email);
-    $this->email->subject('request Placed!');
+    $this->email->subject('Request Placed!');
     
     $msg="<!DOCTYPE html>
             <html>
@@ -198,7 +198,7 @@ class Home extends CI_Controller {
                 $qty = $this->input->post('qty'.$i)[$j];
                $packing = $this->input->post('packing'.$i)[$j];
                 $pallets = $this->input->post('pallets'.$i)[$j];
-                $bales = $this->input->post('pal_bales'.$i)[$j];
+                // $bales = $this->input->post('pal_bales'.$i)[$j];
                 // $shipment_term = $this->input->post('shipment_term'.$i)[$j];
                 $currency = $this->input->post('currency'.$i)[$j];
                  $price = $this->input->post('price'.$i)[$j];
@@ -209,16 +209,16 @@ class Home extends CI_Controller {
                 // $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `bales`, `shipment_term`, `currency`, `price`)
                 // VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $bales, $shipment_term, $currency, $price));
               
-                $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `bales`, `currency`, `price`, `order_date`, `remark_2` )
-                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $bales, $currency, $price, $order_date, $remark_2));
+                $this->db->query("INSERT INTO `general_shipment_order`(`general_order_id`, `order_no`, `dimension_external`, `qty`, `packing`, `pallets`, `currency`, `price`, `order_date`, `remark_2` )
+                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($general_order_id, $order_no, $dimension_external, $qty, $packing, $pallets, $currency, $price, $order_date, $remark_2));
             
                  }
 
                     $general_order_details = $this->orders->general_order_info($general_order_id);
                     $shipment_order_details = $this->orders->getShipmentOrder($general_order_id);
 
-                    $check_mail = $this->login->checkGeneralOrderEmail($customer_id);
-                   
+                    $check_mail = $this->login->checkGeneralOrderEmail($order_id);
+                //    print_r($check_mail);
                     $config = Array(
                         'protocol' => 'smtp',
                         'smtp_host' => 'master.herosite.pro',
@@ -249,7 +249,7 @@ class Home extends CI_Controller {
                                 </div>
                                 <div style='background-color: #fff; color:#000 !important; padding: 0% 10%; text-align: center;'>
                                     <h3 align='center'>Hello, ".$check_mail['customer_name']." 
-                                  <br> Your order has been placed.</h3>
+                                    <br> Your order has been placed.</h3>
                                  
                                     <p> Shipment number is : <strong> $shipment_no </strong> 
                                     <br> Your order will dispatch on <strong> $dispatch_date </strong></p>
@@ -280,18 +280,29 @@ class Home extends CI_Controller {
     </script>";
     }
 
+    // public function shipmentNoCheck(){
+    //     $searchShipmentNo = $this->input->post('searchShipmentNo');
+    //     $data['searchShipmentNo'] = $searchShipmentNo;
+    //     $check_ship = $this->orders->checkShipmentNo($searchShipmentNo);
+    //     // echo json_encode($check_ship);
+    //     if ($check_ship) {
+    //         return true;
+    //         // echo "true";
+    //     } else {
+    //         // echo "false";
+    //         return false;
+    //     }
+    // }
+
     public function shipmentNoCheck(){
         $searchShipmentNo = $this->input->post('searchShipmentNo');
-        $data['searchShipmentNo'] = $searchShipmentNo;
         $check_ship = $this->orders->checkShipmentNo($searchShipmentNo);
-        echo json_encode($check_ship);
-        if ($check_ship) {
-            return true;
-        } else {
-            // echo "false";
-            return false;
-        }
+    
+        // Output the result as JSON
+        header('Content-Type: application/json'); // Set the correct content type
+        echo json_encode($check_ship ? true : false); // Output the result as JSON
     }
+    
 }
 ?>
   

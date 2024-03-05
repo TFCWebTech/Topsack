@@ -17,16 +17,30 @@ class Login_model extends CI_Model
         return $query->row_array();
     }
 
-    public function checkGeneralOrderEmail($customer_id)
+    public function getSampleOrderCustomerName($sample_request_id)
     {
-    	$sql="SELECT * FROM  `customer` ";
-        $query = $this->db->query($sql);
+    	// $sql="SELECT * FROM  `customer` ";
+        // $query = $this->db->query($sql);
+        // return $query->row_array();
+        $this->db->select('c.customer_name');
+        $this->db->from('sample_request as s');
+        $this->db->join('customer as c', 's.customer_id = c.customer_id', 'left');
+        $this->db->where('s.sample_request_id', $sample_request_id);
+        $query = $this->db->get();
         return $query->row_array();
-        // $this->db->select('*');
-        // $this->db->from('orders as g');
-        // $this->db->join('customer as c', 'g.customer_id = c.customer_id', 'left');
-        // $this->db->where('g.customer_id', $customer_id);
-        // return $this->db->get()->result_array();
+    }
+
+    public function checkGeneralOrderEmail($order_id)
+    {
+    	// $sql="SELECT * FROM  `customer` ";
+        // $query = $this->db->query($sql);
+        // return $query->row_array();
+        $this->db->select('c.customer_name');
+        $this->db->from('orders as o');
+        $this->db->join('customer as c', 'o.customer_id = c.customer_id', 'left');
+        $this->db->where('o.order_id ', $order_id);
+        $query = $this->db->get();
+        return $query->row_array();
     }
     
     public function checkEmailAddStaff($searchEmail)

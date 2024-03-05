@@ -99,6 +99,7 @@ width: 95%;
     background-color: #f8f9fc !important;
     border-radius: 0rem !important;
 }
+
     </style>
 </head>
 
@@ -173,11 +174,18 @@ width: 95%;
                             <!-- <form action="<?php echo site_url('CustomerOrder/searchData') ?>" method="post"
                                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search "> -->
                                 <div class="input-group  ">
-                                    <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput" id="searchOrderInput" placeholder="Search By Shipment No."
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                        <input type="text" class="form-control bg-light border-1 small" name="searchOrderInput" id="searchOrderInput" placeholder="Search By Shipment No."
                                         aria-label="Search" aria-describedby="basic-addon2" onkeypress="handleKeyPress(event)">
-                                        <button class="btn btn-primary" type="button" id="searchOrderBtn" onclick="searchOrder()"> 
+                                        <br>
+                                        <div id="error_message" style="color: red; display: none;">Please Enter Shipment No.</div>
+                                        </div>
+                                        </div>
+                                        <button class="btn btn-primary" type="button" id="searchOrderBtn" onclick="searchOrder()" style="height:40px;"> 
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
+                                       
                                 </div>
                             <!-- </form> -->
                             </div>
@@ -269,6 +277,12 @@ width: 95%;
   function searchOrder(){
     // alert('cliekd');
    searchOrderID = $('#searchOrderInput').val();
+   if (!searchOrderID) {
+        $('#error_message').show(); // Show error message
+        return; // Exit function
+    } else {
+        $('#error_message').hide(); // Hide error message if it's currently shown
+    }
    $.ajax({
     type: 'POST',
             url: "<?php echo site_url('CustomerOrder/searchData'); ?>",

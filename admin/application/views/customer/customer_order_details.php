@@ -239,6 +239,20 @@
     cursor: pointer;
     color: blue;
     }
+    @media(max-width:509px) {
+    #completedOrder {
+        margin-left: 0px !important;
+    }
+
+    .col-md-12,
+    .col-md-2,
+    .col-md-4,
+    .col-md-8 {
+
+        padding-right: 1rem !important;
+        padding-left: 0.5rem !important;
+    }
+}
 </style>
 
 <body id="page-top" class="sidebar-toggled">
@@ -515,7 +529,20 @@
                                                                                                         <table class="table table-bordered mt-4"  style="width: 100%">
                                                                                                             <thead>
                                                                                                                 <tr>
-                                                                                                                    <th>Sl. No. </th>
+                                                                                                                <th>Sl. No. </th>
+                                                                                                                    <th>Order No </th>
+                                                                                                                    <th>Order Date </th>
+                                                                                                                    <th>Dimension External </th>
+                                                                                                                    <th>QTY </th>
+                                                                                                                    <th>Packing </th>
+                                                                                                                    <th>Pallets </th>
+                                                                                                                    <!-- <th>PAL/Bales </th> -->
+                                                                                                                    <!-- <th>Shipment Term </th> -->
+                                                                                                                    <th>Currency </th>
+                                                                                                                    <th>Price </th>
+                                                                                                                    <th>Remark</th>
+
+                                                                                                                    <!-- <th>Sl. No. </th>
                                                                                                                     <th>Order No </th>
                                                                                                                     <th>Order Date</th>
                                                                                                                     <th>Dimension External </th>
@@ -524,7 +551,7 @@
                                                                                                                     <th>Pallets </th>
                                                                                                                     <th>PAL/Bales </th>
                                                                                                                     <th>Currency </th>
-                                                                                                                    <th>Price </th>
+                                                                                                                    <th>Price </th> -->
                                                                                                                 </tr>
                                                                                                             </thead>
                                                                                                             <?php 
@@ -533,7 +560,7 @@
                                                                                                                 $slNo ++;
                                                                                                                 ?>
                                                                                                                 <tr >
-                                                                                                                    <td> <?php echo $slNo; ?> </td>
+                                                                                                                    <!-- <td> <?php echo $slNo; ?> </td>
                                                                                                                     <td> <?php echo $shipmentOrder['order_no']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['order_date']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['dimension_external']; ?></td>
@@ -542,7 +569,21 @@
                                                                                                                     <td> <?php echo $shipmentOrder['pallets']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['bales']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['currency']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['price']; ?></td> -->
+
+
+                                                                                                                    <td> <?php echo $slNo; ?> </td>
+                                                                                                                    <td> <?php echo $shipmentOrder['order_no']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['order_date']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['dimension_external']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['qty']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['packing']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['pallets']; ?></td>
+                                                                                                                    <!-- <td> <?php echo $shipmentOrder['bales']; ?></td> -->
+                                                                                                                    <!-- <td> <?php echo $shipmentOrder['shipment_term']; ?></td> -->
+                                                                                                                    <td> <?php echo $shipmentOrder['currency']; ?></td>
                                                                                                                     <td> <?php echo $shipmentOrder['price']; ?></td>
+                                                                                                                    <td> <?php echo $shipmentOrder['remark_2']; ?></td>
                                                                                                                     
                                                                                                                 </tr>
                                                                                                             <?php } 
