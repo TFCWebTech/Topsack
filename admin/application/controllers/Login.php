@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Login extends CI_Controller {
 
+class Login extends CI_Controller {
+  
 	function __construct(){
 		parent::__construct();
         $this->load->helper('url');
@@ -174,97 +175,142 @@ class Login extends CI_Controller {
         }
     }
 
-	public function forgot_pass()
-    {
-        $email = $this->input->post('send_email');
-        $check_mail = $this->login->checkEmail($email);
-		print_r($check_mail);
-        if (empty($check_mail)) {
-            $this->session->set_flashdata('error', "Invalid email");
-            // redirect('Login');
-        } else {
-            $login_id = $check_mail['login_id'];
-            $password = $check_mail['password'];
+	// public function forgot_pass()
+    // {
+    //     $email = $this->input->post('send_email');
+    //     $check_mail = $this->login->checkEmail($email);
+	// 	print_r($check_mail);
+    //     if (empty($check_mail)) {
+    //         $this->session->set_flashdata('error', "Invalid email");
+    //         // redirect('Login');
+    //     } else {
+    //         $login_id = $check_mail['login_id'];
+    //         $password = $check_mail['password'];
 
-            //Random String
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $randomString = '';
+    //         //Random String
+    //         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    //         $randomString = '';
             
-            for ($i = 0; $i < 10; $i++) {
-                $index = rand(0, strlen($characters) - 1);
-                $randomString .= $characters[$index];
-            }
+    //         for ($i = 0; $i < 10; $i++) {
+    //             $index = rand(0, strlen($characters) - 1);
+    //             $randomString .= $characters[$index];
+    //         }
 
-            $updatedata = array(
-                'token' => $randomString,
-            );
-            $this->login->update('login', 'login_id', $login_id, $updatedata);
+    //         $updatedata = array(
+    //             'token' => $randomString,
+    //         );
+    //         $this->login->update('login', 'login_id', $login_id, $updatedata);
 
-            $mail_data['email'] = $check_mail['email'];
-            $mail_data['login_id'] = $check_mail['login_id'];
-            $mail_data['type'] = $check_mail['type'];
-            $mail_data['token'] = $randomString;
-            // redirect('Login');
-            $config = array(
-                'protocol' => 'smtp',
-                'smtp_host' => 'smtp.mailtrap.io',
-                '_smtp_auth' => TRUE,
-                'smtp_port' => 587, // or 465 for SSL
-                'smtp_user' => 'cce4c0db82ac7f',
-                'smtp_pass' => 'de619eae625e82',
-                'mailtype' => 'html',
-                'charset' => 'utf-8',
-                'newline' => "\r\n", // Add this line
-                'smtp_debug' => TRUE
-            );
+    //         $mail_data['email'] = $check_mail['email'];
+    //         $mail_data['login_id'] = $check_mail['login_id'];
+    //         $mail_data['type'] = $check_mail['type'];
+    //         $mail_data['token'] = $randomString;
+    //         // redirect('Login');
+    //         $config = array(
+    //             'protocol' => 'smtp',
+    //             'smtp_host' => 'smtp.mailtrap.io',
+    //             '_smtp_auth' => TRUE,
+    //             'smtp_port' => 587, // or 465 for SSL
+    //             'smtp_user' => 'cce4c0db82ac7f',
+    //             'smtp_pass' => 'de619eae625e82',
+    //             'mailtype' => 'html',
+    //             'charset' => 'utf-8',
+    //             'newline' => "\r\n", // Add this line
+    //             'smtp_debug' => TRUE
+    //         );
             
-            $this->load->library('email', $config);
-            $this->email->set_mailtype("html");
-            $this->email->from('admin@topsack.com', 'Topsack-Packaging');
-            $this->email->to($email);
-            $this->email->subject('Forgot Password!');
+    //         $this->load->library('email', $config);
+    //         $this->email->set_mailtype("html");
+    //         $this->email->from('admin@topsack.com', 'Topsack-Packaging');
+    //         $this->email->to($email);
+    //         $this->email->subject('Forgot Password!');
             
-            $msg="<!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title></title>
-                    </head>
-                   <body style='border-top: 10px solid #3fa3df;text-align: center; color:#000 !important;'>
-                       <div style='text-align: center;padding: 10px; background-color:white;'>
-                            <img src='https://topsack.com/image/logo.png' style='width: 25%;vertical-align:middle'>
-                        </div>
-                        <div style='background-color: #fff; color:#000 !important; padding: 0% 10%; text-align: center;'>
-                            <h1 align='center'>Reset Password</h1>
-                            <h3 align='center'>Hello, ".$check_mail['type']."</h3>
-                            <p style='color: #757272; text-align:'center' >To reset your password please click on the below button.</p>
-                            <div style='text-align: center;'>
-                                <a href='".site_url('Login/resetPassword/'.$mail_data['login_id'].'/'.$mail_data['token'])."'><button style='background-color: #3fa3df;border: 1px solid #3fa3df;color: #fff;padding: 10px;'> Reset Password</button></a>  
-                            </div>
-                        </div>
-                        <p style='color: gray;padding: 10px;'>If you didn't make this request, ignore this email.</p>
-                    </body>.
-                    </html>";
-            $this->email->message($msg);
-            echo $this->email->print_debugger();
-            $result = $this->email->send();
-            if($this->email->send())
-                {
-                echo "Success! - An email has been sent to ".$to;
-                }
-                else
-                { 
-                show_error($this->email->print_debugger());
-                return false;
-                }
-            // if($result) {
-            //     $this->session->set_flashdata('success','Email is Sent');
-            // } else {
-            //     $this->session->set_flashdata('error','Email is not sent');
-            // }
-        }
-        // redirect('Login');
-    }
+    //         $msg="<!DOCTYPE html>
+    //                 <html>
+    //                 <head>
+    //                     <title></title>
+    //                 </head>
+    //                <body style='border-top: 10px solid #3fa3df;text-align: center; color:#000 !important;'>
+    //                    <div style='text-align: center;padding: 10px; background-color:white;'>
+    //                         <img src='https://topsack.com/image/logo.png' style='width: 25%;vertical-align:middle'>
+    //                     </div>
+    //                     <div style='background-color: #fff; color:#000 !important; padding: 0% 10%; text-align: center;'>
+    //                         <h1 align='center'>Reset Password</h1>
+    //                         <h3 align='center'>Hello, ".$check_mail['type']."</h3>
+    //                         <p style='color: #757272; text-align:'center' >To reset your password please click on the below button.</p>
+    //                         <div style='text-align: center;'>
+    //                             <a href='".site_url('Login/resetPassword/'.$mail_data['login_id'].'/'.$mail_data['token'])."'><button style='background-color: #3fa3df;border: 1px solid #3fa3df;color: #fff;padding: 10px;'> Reset Password</button></a>  
+    //                         </div>
+    //                     </div>
+    //                     <p style='color: gray;padding: 10px;'>If you didn't make this request, ignore this email.</p>
+    //                 </body>.
+    //                 </html>";
+    //         $this->email->message($msg);
+    //         echo $this->email->print_debugger();
+    //         $result = $this->email->send();
+    //         if($this->email->send())
+    //             {
+    //             echo "Success! - An email has been sent to ".$to;
+    //             }
+    //             else
+    //             { 
+    //             show_error($this->email->print_debugger());
+    //             return false;
+    //             }
+    //         // if($result) {
+    //         //     $this->session->set_flashdata('success','Email is Sent');
+    //         // } else {
+    //         //     $this->session->set_flashdata('error','Email is not sent');
+    //         // }
+    //     }
+    //     // redirect('Login');
+    // }
  	
+    public function forgot_pass() {
+        // Load form helper and validation library
+        $this->load->helper('form');
+        // $this->load->library('PHPMailer-master/src/PHPMailer');
+        // $this->load->library('form_validation');
+import('PHPMailer-master/src/PHPMailer');
+        // Get form data
+        $email = $this->input->post('send_email');
+        // $email = $this->input->post('email');
+        // $message = $this->input->post('message');
+
+        // Prepare mail content
+        $messagecontent ="Email = " . $email ;
+
+        // Create a PHPMailer instance
+        $mail = new PHPMailer();
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.mailtrap.io'; // Set your SMTP server
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'cce4c0db82ac7f'; // SMTP username
+            $mail->Password   = 'de619eae625e82'; // SMTP password
+            $mail->Port       = 2525; // SMTP port
+
+            // Recipients
+            $mail->setFrom('from@example.com', 'Mailer');
+            $mail->addAddress('joe@example.net', 'Joe User');
+            $mail->addReplyTo('info@example.com', 'Information');
+            $mail->addCC('cc@example.com');
+            $mail->addBCC('bcc@example.com');
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Here is the subject';
+            $mail->Body    = $messagecontent;
+
+            // Send email
+            $mail->send();
+            echo 'Message has been sent';
+        } catch (Exception $e) {
+            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+        }
+    }
  	public function Logout()
  	{
  		$this->session->unset_userdata('userData');
