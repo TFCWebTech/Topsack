@@ -147,7 +147,7 @@
     </div>
 
     <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+      <div class="modal-dialog">
     
       <!-- Modal content-->
       <div class="modal-content">
@@ -164,7 +164,7 @@
                     <input type="email" class="form-control" id="email" placeholder="Enter email" name="send_email" required>
                 </div>
                 <div class="float-right pt-1">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
                 </div>
                 </form>
         </div>
